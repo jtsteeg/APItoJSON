@@ -28,9 +28,18 @@ for i in range(3):
     plantNameAndSeries = requests.get(
         "https://api.eia.gov/category/?api_key=1d97ccab56e4ea052f94379e9adb787a&category_id=" + str(plantCategoryID)).json()
 
-    plantSeriesID = plantNameAndSeries['category']['childseries'][0]['series_id']
+    for j in range(len(plantNameAndSeries['category']['childseries'])):
+        if(plantNameAndSeries['category']['childseries'][j]['name'].__contains__("Net generation")):
+            print(plantNameAndSeries['category']['childseries'][j]['name'])
+            plantSeriesID = plantNameAndSeries['category']['childseries'][j]['series_id']
+            break
 
     print(plantSeriesID)
+    plantInfo = requests.get(
+        "https://api.eia.gov/series/?api_key=1d97ccab56e4ea052f94379e9adb787a&series_id=" + plantSeriesID).json()
+
+    print("coordinates: " + plantInfo['series'][0]['latlon'])
+    print("2020 output: " + str(plantInfo['series'][0]['data'][0][1]))
 
 
 with open("powerplants.json", "w") as outfile:
