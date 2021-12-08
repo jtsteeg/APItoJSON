@@ -22,7 +22,7 @@ for i in range(3):
 
     plantCategoryID = illinoisPowerPlants['category']['childcategories'][i]['category_id']
     plantName = re.sub("[\(\[].*?[\)\]]", "",
-                       illinoisPowerPlants['category']['childcategories'][i]['name']).lstrip()
+                       illinoisPowerPlants['category']['childcategories'][i]['name']).strip()
 
     print(plantCategoryID)
     # 2nd endpoint
@@ -78,7 +78,9 @@ for i in range(3):
         powerPlants["powerPlants"].insert(currentPlants, {})
         # illinoisPowerPlants['category']['childcategories'][i]['name']
         powerPlants["powerPlants"][currentPlants]["name"] = plantName
-        powerPlants["powerPlants"][currentPlants]["coordinates"] = plantInfo['series'][0]['latlon']
+        #powerPlants["powerPlants"][currentPlants]["coordinates"] = plantInfo['series'][0]['latlon']
+        powerPlants["powerPlants"][currentPlants]["coordinates"] = {
+            "lat": float(plantInfo['series'][0]['lat']), "lon": float(plantInfo['series'][0]['lon'])}
         powerPlants["powerPlants"][currentPlants]["outputMWH"] = plantInfo['series'][0]['data'][0][1]
         powerPlants["powerPlants"][currentPlants]["type"] = stationType
         powerPlants["totalOutput"] = powerPlants["totalOutput"] + \
