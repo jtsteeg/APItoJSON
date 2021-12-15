@@ -4,6 +4,7 @@ import os
 import re
 import operator
 
+
 EIA_KEY = os.getenv('EIA_KEY')
 eiaUri = "https://api.eia.gov/category/?api_key=%s" % EIA_KEY
 eiaSeriesUri = "https://api.eia.gov/series/?api_key=%s" % EIA_KEY
@@ -39,8 +40,8 @@ currentPlants = 0
 for i in range(len(illinoisPowerPlants['category']['childcategories'])):
 
     plantCategoryID = illinoisPowerPlants['category']['childcategories'][i]['category_id']
-    plantName = re.sub("[\(\[].*?[\)\]]", "",
-                       illinoisPowerPlants['category']['childcategories'][i]['name']).strip()
+    plantName = re.sub("[\(\[].*?[\)\]]", "", illinoisPowerPlants['category']
+                       ['childcategories'][i]['name']).strip()
 
     print("plant in location " + str(i) + " is " + plantName)
     # 2nd endpoint
