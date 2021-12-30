@@ -58,6 +58,7 @@ for i in range(len(illinoisPowerPlants['category']['childcategories'])):
     plantInfo = requests.get(
         eiaSeriesUri + "&series_id=" + plantSeriesID).json()
 
+    # populate JSON with power plant data
     if(plantInfo['series'][0]['data'][0][0] == "2020" and plantInfo['series'][0]['data'][0][1] > 0):
 
         print(i)
@@ -66,9 +67,7 @@ for i in range(len(illinoisPowerPlants['category']['childcategories'])):
         print("outputMWH: " + str(plantInfo['series'][0]['data'][0][1]))
 
         powerPlants["powerPlants"].insert(currentPlants, {})
-        # illinoisPowerPlants['category']['childcategories'][i]['name']
         powerPlants["powerPlants"][currentPlants]["name"] = plantName
-        # powerPlants["powerPlants"][currentPlants]["coordinates"] = plantInfo['series'][0]['latlon']
         powerPlants["powerPlants"][currentPlants]["coordinates"] = {
             "lat": float(plantInfo['series'][0]['lat']), "lon": float(plantInfo['series'][0]['lon'])}
         powerPlants["powerPlants"][currentPlants]["outputMWH"] = plantInfo['series'][0]['data'][0][1]
