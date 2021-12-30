@@ -36,14 +36,12 @@ renewableSources = ["hydroelectric", "wind", "solar", "biomass"]
 illinoisPowerPlants = requests.get(eiaUri + "&category_id=902944").json()
 
 currentPlants = 0
-# len(illinoisPowerPlants['category']['childcategories'])
 for i in range(len(illinoisPowerPlants['category']['childcategories'])):
 
     plantCategoryID = illinoisPowerPlants['category']['childcategories'][i]['category_id']
     plantName = re.sub("[\(\[].*?[\)\]]", "", illinoisPowerPlants['category']
                        ['childcategories'][i]['name']).strip()
 
-    print("plant in location " + str(i) + " is " + plantName)
     # 2nd endpoint
     plantNameAndSeries = requests.get(
         eiaUri + "&category_id=" + str(plantCategoryID)).json()
@@ -53,7 +51,6 @@ for i in range(len(illinoisPowerPlants['category']['childcategories'])):
             plantSeriesID = plantNameAndSeries['category']['childseries'][j]['series_id']
             break
 
-    print("plant series in location " + str(i) + " is " + plantSeriesID)
     # 3rd endpoint
     plantInfo = requests.get(
         eiaSeriesUri + "&series_id=" + plantSeriesID).json()
@@ -61,8 +58,7 @@ for i in range(len(illinoisPowerPlants['category']['childcategories'])):
     # populate JSON with power plant data
     if(plantInfo['series'][0]['data'][0][0] == "2020" and plantInfo['series'][0]['data'][0][1] > 0):
 
-        print(i)
-        print(plantName)
+        print("plant in location " + str(i) + " is " + plantName)
         print("coordinates: " + plantInfo['series'][0]['latlon'])
         print("outputMWH: " + str(plantInfo['series'][0]['data'][0][1]))
 
@@ -80,7 +76,6 @@ for i in range(len(illinoisPowerPlants['category']['childcategories'])):
             if(plantNameAndSeries['category']['childseries'][k]['series_id'].__contains__("GEN")):
                 for fuelSuffix in plantTypes.keys():
                     if(plantNameAndSeries['category']['childseries'][k]['series_id'].__contains__(fuelSuffix)):
-                        print(plantName + " uses " + plantTypes[fuelSuffix])
                         fuelInfo = requests.get(
                             eiaSeriesUri + "&series_id=" + plantNameAndSeries['category']['childseries'][k]['series_id']).json()
                         if(fuelInfo['series'][0]['data'][0][1] > 0):
@@ -94,12 +89,9 @@ for i in range(len(illinoisPowerPlants['category']['childcategories'])):
 
         topFuel = max(powerPlants["powerPlants"][currentPlants]["fuelTypes"],
                       key=powerPlants["powerPlants"][currentPlants]["fuelTypes"].get)
-        print("most used fuel for " + plantName + " is " + topFuel)
         if any(element in topFuel for element in renewableSources):
-            print('RENEEEEEEEEWABLE')
             powerPlants["powerPlants"][currentPlants]["renewable"] = True
         else:
-            print('not renewable')
             powerPlants["powerPlants"][currentPlants]["renewable"] = False
 
         currentPlants += 1

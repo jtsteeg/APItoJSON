@@ -39,7 +39,7 @@ except exceptions.CosmosResourceExistsError:
 except exceptions.CosmosHttpResponseError:
     raise
 
-
+# set admin username container and populate it with admin user credentials
 database = client.get_database_client(database_name)
 adminContainer = database.get_container_client(admin_container_name)
 adminContainer.upsert_item(
